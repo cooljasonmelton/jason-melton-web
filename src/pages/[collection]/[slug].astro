@@ -1,0 +1,85 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+	const collections = ['music', 'video', 'writing', 'visuals'];
+	let paths = [];
+	
+	for (const col of collections) {
+		const items = await getCollection(col as any);
+		for (const item of items) {
+			paths.push({
+				params: { collection: col, slug: item.slug },
+				props: { item },
+			});
+		}
+	}
+	
+	return paths;
+}
+
+const { item } = Astro.props;
+const { Content } = await item.render();
+---
+
+<Layout title={item.data.title}>
+	<article class="detail">
+		<header>
+			<span class="collection-label">{item.collection}</span>
+			<h1>{item.data.title}</h1>
+			<time>{item.data.date.toLocaleDateString()}</time>
+		</header>
+		
+		{item.data.embedUrl && (
+			<div class="embed-container">
+				<iframe src={item.data.embedUrl} allowfullscreen></iframe>
+			</div>
+		)}
+		
+		{item.data.image && (
+			<div class="image-container">
+				<img src={item.data.image} alt={item.data.title} />
+			</div>
+		)}
+		
+		<div class="content">
+			<Content />
+		</div>
+	</article>
+</Layout>
+
+<style>
+	header {
+		margin-bottom: 2rem;
+		text-align: center;
+	}
+	.collection-label {
+		text-transform: uppercase;
+		font-weight: bold;
+		color: var(--meta-text);
+		letter-spacing: 0.05em;
+		font-size: 0.9rem;
+	}
+	h1 { margin: 0.5rem 0; }
+	time { color: var(--meta-text); font-size: 0.9rem; }
+	
+	.embed-container iframe {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		border: none;
+		border-radius: 8px;
+		margin-bottom: 2rem;
+	}
+	
+	.image-container img {
+		max-width: 100%;
+		border-radius: 8px;
+		margin-bottom: 2rem;
+	}
+	
+	.content {
+		line-height: 1.6;
+		font-size: 1.1rem;
+	}
+</style>

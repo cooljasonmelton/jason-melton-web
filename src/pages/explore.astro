@@ -1,0 +1,95 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const music = await getCollection('music');
+const video = await getCollection('video');
+const writing = await getCollection('writing');
+const visuals = await getCollection('visuals');
+
+const allItems = [...music, ...video, ...writing, ...visuals].sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<Layout title="Jason Melton | Explore" bgImage="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2000&auto=format&fit=crop">
+	<div class="explore-header">
+		<h1>Explore</h1>
+		
+		<div class="controls">
+			<div class="filter-group" style="margin: 0;">
+				<button class="tri-filter" data-category="music" data-state="0">Music</button>
+				<button class="tri-filter" data-category="video" data-state="0">Video</button>
+				<button class="tri-filter" data-category="writing" data-state="0">Writing</button>
+				<button class="tri-filter" data-category="visuals" data-state="0">Visuals</button>
+			</div>
+			
+			<button id="shuffle-btn" class="btn">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
+				Shuffle
+			</button>
+		</div>
+	</div>
+
+	<div class="explore-grid" id="grid">
+		{allItems.map((item, index) => (
+			<article class="card grid-item filterable-item" data-category={item.collection} data-index={index}>
+				<div class="meta">
+					<span class="collection-label">{item.collection}</span>
+				</div>
+				<h2><a href={`/${item.collection}/${item.slug}`}>{item.data.title}</a></h2>
+				{item.data.description && <p>{item.data.description}</p>}
+			</article>
+		))}
+	</div>
+</Layout>
+
+<style>
+	.explore-header {
+		margin-bottom: 2rem;
+	}
+	
+	.controls {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 1rem;
+		margin-top: 1.5rem;
+	}
+	
+	.explore-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+		gap: 1.5rem;
+	}
+	
+	.grid-item {
+		transition: opacity 0.3s, transform 0.3s;
+	}
+</style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const grid = document.getElementById('grid');
+		const items = Array.from(grid?.querySelectorAll('.grid-item') || []);
+		const shuffleBtn = document.getElementById('shuffle-btn');
+
+		// Shuffling logic
+		shuffleBtn?.addEventListener('click', () => {
+			// Only shuffle items that are not currently hidden by the global filter
+			const visibleItems = items.filter(item => !item.classList.contains('hidden-by-filter'));
+			
+			// Fisher-Yates shuffle
+			for (let i = visibleItems.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[visibleItems[i], visibleItems[j]] = [visibleItems[j], visibleItems[i]];
+			}
+			
+			// Re-append to DOM in new order
+			visibleItems.forEach(item => {
+				grid?.appendChild(item);
+			});
+		});
+	});
+</script>

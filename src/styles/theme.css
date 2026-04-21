@@ -1,0 +1,194 @@
+/*
+ * THEME CONFIGURATION
+ * 
+ * Adjust these variables to change the entire look and feel of the site.
+ * This system is designed around the "Steel Town Scholar" concept:
+ * Industrial grit meets academic philosophy, with moments of controlled chaos.
+ */
+
+:root {
+	/* 1. TYPOGRAPHY */
+	/* Clean, wide sans-serif for headings */
+	--font-display: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	
+	/* Relatable, clean serif for reading */
+	--font-body: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+	
+	/* Utilitarian monospace for metadata/labels */
+	--font-mono: 'Courier New', Courier, monospace;
+
+	/* 2. SPACING & STRUCTURE */
+	--border-width: 2px;
+	--border-radius: 0px; /* Brutalist, no soft edges */
+	--card-padding: 2rem;
+	--container-width: 800px;
+	
+	/* 3. LIGHT MODE COLORS (The Academic) */
+	--color-bg: #fbfaf8; /* Soft parchment/newsprint */
+	--color-text: #1a1a1a; /* Off-black */
+	--color-border: #1a1a1a; /* Stark contrast borders */
+	--color-card-bg: #ffffff; /* Pure white cards */
+	--color-meta: #666666;
+	
+	/* Filter states */
+	--color-negative: #aaaaaa;
+
+	/* The Chaos Accent: A bright, harsh color that punches through the academic vibe */
+	--color-accent: #5500cc; /* Darker electric violet / Deep purple */
+	
+	/* Button specific */
+	--color-btn-bg: #ffffff;
+	--color-btn-text: #1a1a1a;
+	--color-btn-hover: #1a1a1a;
+	--color-btn-text-hover: #ffffff;
+}
+
+html.dark {
+	/* 3. DARK MODE COLORS (The Green Room / The Mill) */
+	--color-bg: #111111; /* Deep charcoal, almost black */
+	--color-text: #fbfaf8; /* Off-white text */
+	--color-border: #444444; /* Muted borders so it's not too loud */
+	--color-card-bg: #1a1a1a; /* Slightly lighter card background */
+	--color-meta: #aaaaaa;
+	
+	/* The Chaos Accent in dark mode */
+	--color-accent: #b05bff; /* Soft, glowing ultraviolet */
+	
+	/* Button specific */
+	--color-btn-bg: #1a1a1a;
+	--color-btn-text: #fbfaf8;
+	--color-btn-hover: #fbfaf8;
+	--color-btn-text-hover: #111111;
+}
+
+/* 
+ * GLOBAL STYLES 
+ * Applying the variables above to the HTML elements
+ */
+body {
+	margin: 0;
+	font-family: var(--font-body);
+	background: var(--color-bg);
+	color: var(--color-text);
+	transition: background-color 0.3s ease, color 0.3s ease;
+	line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: var(--font-display);
+	text-transform: uppercase;
+	letter-spacing: 0.1em; /* Wide spacing for headings */
+	font-weight: 800;
+	margin-top: 0;
+}
+
+a {
+	color: inherit;
+	text-decoration: underline;
+	text-decoration-color: var(--color-border);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 4px;
+	transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+/* The Chaos Element: Hover states break the rules slightly */
+a:hover {
+	color: var(--color-accent);
+	text-decoration-color: var(--color-accent);
+	text-decoration-style: wavy;
+	text-decoration-thickness: 2px;
+}
+
+/* Shared Components */
+.card {
+	border: var(--border-width) solid var(--color-border);
+	padding: var(--card-padding);
+	border-radius: var(--border-radius);
+	background: var(--color-card-bg);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+	position: relative;
+}
+
+/* Controlled Chaos: Cards slightly offset their shadow like a misprinted zine */
+.card:hover {
+	transform: translate(-4px, -4px);
+	box-shadow: 4px 4px 0px 0px var(--color-accent);
+}
+
+.meta {
+	font-family: var(--font-mono);
+	font-size: 0.85rem;
+	color: var(--color-meta);
+	text-transform: uppercase;
+	display: flex;
+	gap: 1rem;
+	margin-bottom: 1rem;
+	border-bottom: 1px dashed var(--color-border);
+	padding-bottom: 0.5rem;
+}
+
+.collection-label {
+	font-weight: bold;
+	color: var(--color-text);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+	.card {
+		margin-left: -1rem;
+		margin-right: -1rem;
+		border-left: none;
+		border-right: none;
+		border-radius: 0;
+	}
+}
+
+/* Tri-State Filter Styles */
+.hidden-by-filter {
+	display: none !important;
+}
+
+.filter-group {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+	align-items: center;
+	margin: 0 1rem;
+}
+
+.btn, .tri-filter {
+	background: transparent;
+	border: 1px solid var(--color-border);
+	color: var(--color-text);
+	padding: 0.5rem 1rem;
+	font-family: var(--font-mono);
+	font-size: 0.9rem;
+	font-weight: bold;
+	cursor: pointer;
+	border-radius: var(--border-radius);
+	transition: all 0.2s;
+	text-transform: uppercase;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+}
+
+.btn:hover, .tri-filter:hover {
+	background: var(--color-border);
+	color: var(--color-bg);
+}
+
+.tri-filter[data-state="1"] {
+	background: var(--color-accent);
+	border-color: var(--color-accent);
+	color: var(--color-bg);
+}
+
+.tri-filter[data-state="-1"] {
+	background: transparent;
+	border-color: var(--color-negative);
+	color: var(--color-negative);
+	text-decoration: line-through;
+}
+

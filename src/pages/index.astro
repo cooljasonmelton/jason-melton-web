@@ -1,11 +1,54 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const music = await getCollection('music');
+const video = await getCollection('video');
+const writing = await getCollection('writing');
+const visuals = await getCollection('visuals');
+
+const allItems = [...music, ...video, ...writing, ...visuals].sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Jason Melton | Timeline" bgImage="https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?q=80&w=2000&auto=format&fit=crop">
+	<div class="page-header">
+		<h1>Timeline</h1>
+		<div class="filter-group">
+			<button class="tri-filter" data-category="music" data-state="0">Music</button>
+			<button class="tri-filter" data-category="video" data-state="0">Video</button>
+			<button class="tri-filter" data-category="writing" data-state="0">Writing</button>
+			<button class="tri-filter" data-category="visuals" data-state="0">Visuals</button>
+		</div>
+	</div>
+	<div class="feed">
+		{allItems.map(item => (
+			<article class="card filterable-item" data-category={item.collection}>
+				<div class="meta">
+					<span class="collection-label">{item.collection}</span>
+					<span class="date">{item.data.date.toLocaleDateString()}</span>
+				</div>
+				<h2><a href={`/${item.collection}/${item.slug}`}>{item.data.title}</a></h2>
+				{item.data.description && <p>{item.data.description}</p>}
+			</article>
+		))}
+	</div>
 </Layout>
+
+<style>
+	.page-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 1rem;
+		margin-bottom: 2rem;
+	}
+	.page-header h1 {
+		margin-bottom: 0;
+	}
+	.filter-group {
+		margin: 0;
+	}
+</style>

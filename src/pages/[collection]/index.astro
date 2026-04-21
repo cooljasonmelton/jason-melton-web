@@ -1,0 +1,31 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+	const collections = ['music', 'video', 'writing', 'visuals'];
+	return collections.map(collection => ({
+		params: { collection },
+		props: { collection }
+	}));
+}
+
+const { collection } = Astro.props;
+const items = await getCollection(collection as any);
+items.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<Layout title={`Jason Melton | ${collection}`}>
+	<h1 style="text-transform: capitalize;">{collection}</h1>
+	<div class="feed">
+		{items.map(item => (
+			<article class="card">
+				<div class="meta">
+					<span class="date">{item.data.date.toLocaleDateString()}</span>
+				</div>
+				<h2><a href={`/${collection}/${item.slug}`}>{item.data.title}</a></h2>
+				{item.data.description && <p>{item.data.description}</p>}
+			</article>
+		))}
+	</div>
+</Layout>

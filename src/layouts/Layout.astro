@@ -38,15 +38,24 @@ const { title, bgImage } = Astro.props;
 	</head>
 	<body class={bgImage ? "page-loading" : ""}>
 		{bgImage && (
+			<script is:inline set:html={`
+				if (sessionStorage.getItem('bgLoaded-${bgImage}')) {
+					document.body.classList.remove('page-loading');
+				}
+			`}></script>
+		)}
+		{bgImage && (
 			<>
 				<div class="site-bg" style={`background-image: url('${bgImage}');`}></div>
 				<script is:inline set:html={`
 					document.addEventListener('DOMContentLoaded', function() {
+						if (!document.body.classList.contains('page-loading')) return;
 						var img = new Image();
 						img.src = '${bgImage}';
 						var removeLoading = function() {
 							requestAnimationFrame(function() {
 								document.body.classList.remove('page-loading');
+								sessionStorage.setItem('bgLoaded-${bgImage}', 'true');
 							});
 						};
 						if (img.complete) {
@@ -214,6 +223,7 @@ const { title, bgImage } = Astro.props;
 	}
 	
 	.site-bg {
+		transition: opacity 1.5s ease-in-out;
 		position: fixed;
 		top: 0;
 		left: 0;

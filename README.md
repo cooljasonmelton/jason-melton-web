@@ -1,6 +1,6 @@
 # Jason Melton | The Steel Town Scholar
 
-A personal archive and portfolio serving as a central hub for writing, comedy, music, and visuals. Designed to feel like a "Steel Town Scholar"—a synthesis of industrial grit from NW Indiana, academic philosophy, and the controlled chaos of stand-up comedy and wrestling.
+A personal archive and portfolio serving as a central hub for writing, comedy, music, and visuals
 
 ## 🏗️ Architecture
 

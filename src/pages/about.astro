@@ -1,12 +1,100 @@
 ---
+import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
+import jasonPhoto from '../assets/about/jason-hs.jpeg';
 ---
 
 <Layout title="Jason Melton | About" bgImage="https://images.unsplash.com/photo-1503551723145-6c040742065b?q=80&w=2000&auto=format&fit=crop">
-	<h1>About Jason</h1>
-	<p>Welcome to my personal archive. A collection of writing, comedy, music, and visuals.</p>
-	<ul>
-		<li><a href="https://twitter.com/">Twitter</a></li>
-		<li><a href="https://github.com/">GitHub</a></li>
-	</ul>
+	<div class="about-container">
+		<div class="about-content">
+			<h1>About Jason</h1>
+			<p>Jason Melton is a Chicago-based comedian and musician that performs across the land. His comedy has been described funny and good. Check out his sketch show Cocaine Murder Jam or the Incubator Podcast.</p>
+			<p>Most of his stuff can be found on the internet.</p>
+			
+			<ul class="social-links">
+				<li><a href="https://twitter.com/">Twitter</a></li>
+				<li><a href="https://github.com/">GitHub</a></li>
+			</ul>
+		</div>
+		
+		<div class="about-image card">
+			<Image src={jasonPhoto} alt="Jason Melton headshot" />
+		</div>
+	</div>
 </Layout>
+
+<style>
+	.about-container {
+		display: flex;
+		flex-direction: column-reverse;
+		gap: 3rem;
+		align-items: center;
+		margin-top: 2rem;
+	}
+
+	.about-content {
+		flex: 1;
+		width: 100%;
+	}
+
+	.about-image {
+		width: 100%;
+		max-width: 350px;
+		padding: 0; /* Removing padding so the image goes to the borders */
+		overflow: hidden; /* Ensure image respects the card border-radius */
+		background: var(--color-border); 
+		transform: translate(-4px, -4px);
+		box-shadow: 4px 4px 0px 0px var(--color-accent);
+	}
+
+	.about-image img {
+		width: 100%;
+		height: auto;
+		display: block;
+		margin-top: -60px;
+		margin-bottom: -115px;
+		filter: grayscale(50%) contrast(0.9);
+		transition: filter 0.3s ease;
+	}
+
+	.social-links {
+		list-style: none;
+		padding: 0;
+		display: flex;
+		gap: 1.5rem;
+		font-family: var(--font-mono);
+		font-weight: bold;
+		text-transform: uppercase;
+		margin-top: 2rem;
+	}
+	
+	.social-links li {
+		border: var(--border-width) solid var(--color-border);
+		padding: 0.5rem 1rem;
+		background: var(--color-card-bg);
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+	}
+	
+	.social-links li:hover {
+		transform: translate(-4px, -4px);
+		box-shadow: 4px 4px 0px 0px var(--color-accent);
+	}
+	
+	.social-links a {
+		text-decoration: none;
+	}
+
+	@media (min-width: 768px) {
+		.about-container {
+			flex-direction: row;
+			align-items: flex-start;
+			justify-content: space-between;
+			gap: 4rem;
+			margin-top: 4rem;
+		}
+
+		.about-image {
+			flex: 0 0 350px;
+		}
+	}
+</style>
